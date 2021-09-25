@@ -1,0 +1,15 @@
+.eventForm {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+}
+
+.cardHeader {
+    text-align: center;
+}
+
+.cardBottom {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
