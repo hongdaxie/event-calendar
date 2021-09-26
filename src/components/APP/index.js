@@ -1,7 +1,6 @@
-import './App.css';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import EventForm from '../EventForm';
+import "./App.css";
+import EventForm from "../EventForm";
+import EventCalendar from "../EventCalendar";
 
 function App() {
   return (
@@ -10,12 +9,8 @@ function App() {
         <EventForm />
       </div>
       <div className="mainSide">
-        <FullCalendar
-          plugins={[ dayGridPlugin ]}
-          initialView="dayGridMonth"
-        />
+        <EventCalendar />
       </div>
-      
     </div>
   );
 }
