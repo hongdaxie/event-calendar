@@ -15,12 +15,15 @@ const LightTooltip = styled(({ className, ...props }) => (
 }));
 
 const EventTooltip = (props) => {
-  const { eventDescription, children } = props;
+  const { eventName, eventDescription, children } = props;
   return (
     <div>
       <LightTooltip
         title={
           <>
+            <Typography variant="h4" gutterBottom>
+              {eventName}
+            </Typography>
             <Typography variant="body1" gutterBottom>
               {eventDescription}
             </Typography>

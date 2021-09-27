@@ -11,12 +11,13 @@ import DeleteDialog from "../DeleteDialog";
 const EventCalendar = () => {
   const currentState = useAppSelector((state) => state.calendarEvent);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const { events } = currentState;
+  const { events, loadingDelete } = currentState;
   const dispatch = useAppDispatch();
 
   const renderEventContent = (eventInfo) => {
     return (
       <EventTooltip
+        eventName={eventInfo.event.title}
         eventDescription={eventInfo.event.extendedProps.description}
       >
         <div>
@@ -29,29 +30,52 @@ const EventCalendar = () => {
   };
 
   const handleEventClick = (eventInfo) => {
-    dispatch(deleteCalendarEvent(eventInfo.event.id));
-    setSelectedEvent();
+    setSelectedEvent({
+      eventId: eventInfo.event.id,
+      eventName: eventInfo.event.title,
+      eventDescription: eventInfo.event.extendedProps.description,
+      eventTime: eventInfo.event.startStr,
+    });
+  };
+
+  const handleCancelDelete = () => {
+    setSelectedEvent(null);
+  };
+
+  const handleConfirmDelete = (eventId) => {
+    dispatch(deleteCalendarEvent(eventId)).then(() => setSelectedEvent(null));
   };
 
   return (
     <>
-      <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        headerToolbar={{
-          left: "prev,next today",
-          center: "title",
-          right: "dayGridMonth,timeGridWeek,timeGridDay",
-        }}
-        editable
-        selectable
-        selectMirror
-        dayMaxEvents
-        events={events}
-        eventContent={renderEventContent}
-        eventClick={handleEventClick}
-      />
-      {selectedEvent ? <DeleteDialog /> : null}
+      <div>
+        <FullCalendar
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          initialView="dayGridMonth"
+          headerToolbar={{
+            left: "prev,next today",
+            center: "title",
+            right: "dayGridMonth,timeGridWeek,timeGridDay",
+          }}
+          editable
+          selectable
+          selectMirror
+          dayMaxEvents
+          events={events}
+          eventContent={renderEventContent}
+          eventClick={handleEventClick}
+        />
+      </div>
+      <div>
+        {selectedEvent ? (
+          <DeleteDialog
+            confirmLoading={loadingDelete}
+            handleCancelDelete={handleCancelDelete}
+            handleConfirmDelete={handleConfirmDelete}
+            {...selectedEvent}
+          />
+        ) : null}
+      </div>
     </>
   );
 };

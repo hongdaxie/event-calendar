@@ -21,7 +21,7 @@ const EventForm = () => {
   const [eventDescription, setEventDescription] = useState("");
   const [eventStartTime, setEventStartTime] = useState(moment.utc().format());
   const currentState = useAppSelector((state) => state.calendarEvent);
-  const { loading } = currentState;
+  const { loadingAdd } = currentState;
   const dispatch = useAppDispatch();
 
   const handleEventTitleChange = (event) => {
@@ -93,7 +93,7 @@ const EventForm = () => {
         </CardContent>
         <CardActions className="cardBottom">
           <LoadingButton
-            loading={loading}
+            loading={loadingAdd}
             variant="contained"
             onClick={addNewCalendarEvent}
           >
