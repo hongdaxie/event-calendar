@@ -18,6 +18,7 @@ import "./EventForm.css";
 
 const EventForm = () => {
   const [eventTitle, setEventTitle] = useState("");
+  const [isTitleEmpty, setIsTitleEmpty] = useState(false);
   const [eventDescription, setEventDescription] = useState("");
   const [eventStartTime, setEventStartTime] = useState(moment.utc().format());
   const currentState = useAppSelector((state) => state.calendarEvent);
@@ -26,10 +27,11 @@ const EventForm = () => {
 
   const handleEventTitleChange = (event) => {
     setEventTitle(event.target.value);
+    setIsTitleEmpty(false);
   };
 
   const handleEventDescriptionChange = (event) => {
-    setEventDescription(event.target.value);
+    setEventDescription(event.target.value.trim());
   };
 
   const handleEventStartTimeChange = (newValue) => {
@@ -38,16 +40,21 @@ const EventForm = () => {
   };
 
   const addNewCalendarEvent = () => {
-    dispatch(
-      addCalendarEvent({
-        title: eventTitle,
-        description: eventDescription,
-        start: eventStartTime,
-      })
-    );
-    setEventTitle("");
-    setEventDescription("");
-    setEventStartTime(moment.utc().format());
+    if (eventTitle) {
+      dispatch(
+        addCalendarEvent({
+          title: eventTitle,
+          description: eventDescription,
+          start: eventStartTime,
+        })
+      );
+      setEventTitle("");
+      setIsTitleEmpty(false);
+      setEventDescription("");
+      setEventStartTime(moment.utc().format());
+    } else {
+      setIsTitleEmpty(true);
+    }
   };
 
   return (
@@ -71,6 +78,8 @@ const EventForm = () => {
               label="Title"
               value={eventTitle}
               onChange={handleEventTitleChange}
+              error={isTitleEmpty}
+              helperText={isTitleEmpty ? "You must enter title" : null}
             />
             <TextField
               id="outlined-disabled"
